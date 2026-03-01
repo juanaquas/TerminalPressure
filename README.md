@@ -47,6 +47,14 @@ python terminal_pressure.py exploit 192.168.1.1 --payload default_backdoor
 
 ---
 
+## 📚 Security Reference Guides
+
+Security testing reference documentation for common attack vectors:
+
+- [**GraphQL Authentication Flaws**](docs/graphql-security-reference.md) — BOLA/IDOR, JWT attacks, rate limiting bypasses, and remediation strategies
+
+---
+
 ## 🛡️ Part of the CyberViser Ecosystem
 
 TerminalPressure is a standalone toolkit that integrates with the **Hancock AI agent** for AI-assisted pentest workflows.
