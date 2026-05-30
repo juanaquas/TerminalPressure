@@ -59,6 +59,6 @@ TerminalPressure is a standalone toolkit that integrates with the **Hancock AI a
 ## 📄 License
 
 **CyberViser Proprietary License** — see [LICENSE](LICENSE).  
-Commercial use requires a written agreement: contact@cyberviser.ai
+Commercial use requires a written agreement: cyberviser@proton.me
 
 © 2025 CyberViser. All Rights Reserved.
